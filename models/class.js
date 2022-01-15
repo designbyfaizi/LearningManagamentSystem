@@ -19,24 +19,6 @@ const classSchema = new Schema({
             },
         },
     ],
-    quizes: [
-        {
-            question: [String],
-            answers: [
-                {
-                    sid: {
-                        type: Schema.Types.ObjectId,
-                        ref: "Student",
-                    },
-                    answer: [String],
-                    marksObtained: Number,
-                },
-            ],
-            totalmarks: {
-                type: Number,
-            },
-        },
-    ],
     assignments: [
         {
             questions: [
