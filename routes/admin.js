@@ -130,7 +130,7 @@ router.get("/class/:id", async (req, res, next) => {
 router.put("/class/:id", async (req, res, next) => {
     try{
         const {name, tid, students, Material, result} = req.body;
-        const response = await Class.findByIdAndUpdate(req.params.id, {name, tid, students, quizes, assignments, Material, result});
+        const response = await Class.findByIdAndUpdate(req.params.id, {name, tid, students, Material, result});
 
         if(!response){
             return res.json({
