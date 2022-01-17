@@ -19,30 +19,6 @@ const classSchema = new Schema({
             },
         },
     ],
-    assignments: [
-        {
-            questions: [
-                {
-                    question: {
-                        type: String
-                    },
-
-                    marks: {
-                        type: Number,
-                    },
-                },
-            ],
-            attempted: [
-                {
-                    studentid: {
-                        type: Schema.Types.ObjectId,
-                        ref: "Student",
-                    },
-                    answer: [String],
-                },
-            ],
-        },
-    ],
     Material: ["./materials/courseid/intro.pdf"],
 
     result: [

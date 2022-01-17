@@ -1,6 +1,7 @@
 const express = require('express');
 const Class = require("../models/class");
 const Quiz = require("../models/quiz");
+const Assignment = require("../models/assignment");
 const Student = require("../models/student");
 const Teacher = require("../models/teacher");
 
@@ -134,11 +135,54 @@ router.delete("/quiz/:id", async (req, res, next) => {
     }
 })
 
-//View Attempted Assignment
+//View Attempted Assignments
 router.get("/viewattassign", () => {})
 
 //Add Assignment
-router.post("/addassign", () => {})
+router.post("/addassign", async (req, res, next) => {
+    //Questions is an Array of Strings
+    const {cid, questions} = req.body;
+    try{
+        const myClass = await Class.findById(cid);
+
+        if(!myClass){
+            return res.json({
+                status: "ERROR",
+                message:"No Class Found."
+            });
+        }
+        const students = myClass.students;
+        const assignmentData = [];
+        const answers = Array(students.length).fill('');
+        const marks = Array(students.length).fill(0);
+        for(let i = 0; i<students.length; i++){
+            const sid = students[i].sid;
+            assignmentData.push({
+                sid,
+                answers,
+                marks,
+                attempted: false,
+                total: 0
+            })
+        }
+
+        const assignment = new Assignment({
+            cid,
+            questions,
+            assignmentData
+
+        });
+        await assignment.save();
+        res.json({
+            status: "SUCCESS",
+            message: "Assignment Added Successfully"
+        })
+    }
+    catch(err){
+        console.log(err);
+        res.send(err);
+    }
+})
 
 //Download Attempted Assignment
 router.get("/assign/:id", () => {})
