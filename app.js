@@ -28,7 +28,7 @@ app.use("*", (req, res, next) => {
     })
 })
 
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.CONNECTION_STRING)
 .then(() => {
     console.log("Database Connected");
     app.listen(process.env.PORT || 3000, () => {
