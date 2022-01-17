@@ -7,7 +7,10 @@ const assignmentSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Class",
     },
-
+    assignmentTitle:{
+        type: String,
+        required: true
+    },
     questions: [
         {
             type: String,

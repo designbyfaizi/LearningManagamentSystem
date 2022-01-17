@@ -8,6 +8,10 @@ const quizSchema = new Schema({
         ref: "Class",
     },
 
+    quizTitle:{
+        type: String,
+        required: true
+    },
     questions: [
         {
             type: String,

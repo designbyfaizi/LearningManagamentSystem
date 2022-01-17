@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const Class = require("../models/class");
 const Quiz = require("../models/quiz");
 const Assignment = require("../models/assignment");
@@ -8,204 +8,248 @@ const Teacher = require("../models/teacher");
 const router = express.Router();
 
 //Show Dashboard
-router.get("/", () => {})
+router.get("/", () => {});
 
 //View Attempted Quiz (Working)
 router.get("/viewattquiz", async (req, res, next) => {
-    try{
+    try {
         const quizzes = await Quiz.find();
-        if(quizzes.length == 0){
-            console.log("No Attempted Quizzes Found");
-            return res.json({
-                status: "ERROR",
-                message: "No Attempted Quizzes Found"
-            });
-        }
         const attemptedQuizzes = [];
         //Extracting All Attempted Quizes
-        for(let i = 0; i<quizzes.length; i++){
-            for(let j = 0; j < quizzes[i].quizData.length; j++){
-                if(quizzes[i].quizData[j].attempted === true){
+        for (let i = 0; i < quizzes.length; i++) {
+            for (let j = 0; j < quizzes[i].quizData.length; j++) {
+                if (quizzes[i].quizData[j].attempted === true) {
                     attemptedQuizzes.push({
-                            questions: quizzes[i].questions,
-                            quizData: quizzes[i].quizData[j]
-                    })
+                        title: quizzes[i].quizTitle,
+                        questions: quizzes[i].questions,
+                        quizData: quizzes[i].quizData[j],
+                    });
                 }
             }
         }
-
+        if (attemptedQuizzes.length == 0) {
+            console.log("No Attempted Quizzes Found");
+            return res.json({
+                status: "ERROR",
+                message: "No Attempted Quizzes Found",
+            });
+        }
         res.json({
             status: "SUCCESS",
             attemptedQuizzes,
-        })
-    }
-    catch(err){
+        });
+    } catch (err) {
         console.log(err);
         res.send(err);
     }
-})
+});
 
 //Add Quiz (Working)
 router.post("/addquiz", async (req, res, next) => {
     //questions is array of strings
-    const {cid, questions} = req.body;
-    try{
+    const { cid, quizTitle, questions } = req.body;
+    try {
         const myClass = await Class.findById(cid);
 
-        if(!myClass){
+        if (!myClass) {
             return res.json({
                 status: "ERROR",
-                message:"No Class Found."
+                message: "No Class Found.",
             });
         }
         const students = myClass.students;
         const quizData = [];
-        const answers = Array(students.length).fill('');
+        const answers = Array(students.length).fill("");
         const marks = Array(students.length).fill(0);
-        for(let i = 0; i<students.length; i++){
+        for (let i = 0; i < students.length; i++) {
             const sid = students[i].sid;
             quizData.push({
                 sid,
                 answers,
                 marks,
                 attempted: false,
-                total: 0
-            })
+                total: 0,
+            });
         }
 
         const quiz = new Quiz({
             cid,
+            quizTitle,
             questions,
-            quizData
-
+            quizData,
         });
         await quiz.save();
         res.json({
             status: "SUCCESS",
-            message: "Quiz Added Successfully"
-        })
-    }
-    catch(err){
+            message: "Quiz Added Successfully",
+        });
+    } catch (err) {
         console.log(err);
         res.send(err);
     }
-})
+});
 
 //Download Attempted Quiz (Working)
 router.get("/quiz/:id", async (req, res, next) => {
-    try{
+    try {
         const quiz = await Quiz.findById(req.params.id);
-        if(!quiz){
+        if (!quiz) {
             console.log("Quiz not Found");
             return res.json({
                 status: "ERROR",
-                message: "Quiz not Found!"
-            })
+                message: "Quiz not Found!",
+            });
         }
         res.json({
             status: "SUCCESS",
-            quiz
-        })
-    }
-    catch(err){
+            quiz,
+        });
+    } catch (err) {
         console.log(err);
         res.send(err);
     }
-})
+});
 
 //Delete Quiz (Working)
 router.delete("/quiz/:id", async (req, res, next) => {
-    try{
+    try {
         const quiz = await Quiz.findById(req.params.id);
-        if(!quiz){
+        if (!quiz) {
             return res.json({
                 status: "ERROR",
-                message:"Quiz does not exist!"
-            })
+                message: "Quiz does not exist!",
+            });
         }
         await quiz.delete();
         res.json({
-            staus:"SUCCESS",
-            message:"Quiz Deleted Successfully"
-        })
-    }
-    catch(err){
+            staus: "SUCCESS",
+            message: "Quiz Deleted Successfully",
+        });
+    } catch (err) {
         console.log(err);
-        res.send(err)
+        res.send(err);
     }
-})
+});
 
-//View Attempted Assignments
-router.get("/viewattassign", () => {})
-
-//Add Assignment
-router.post("/addassign", async (req, res, next) => {
-    //Questions is an Array of Strings
-    const {cid, questions} = req.body;
-    try{
-        const myClass = await Class.findById(cid);
-
-        if(!myClass){
+//View Attempted Assignments (Working)
+router.get("/viewattassign", async (req, res, next) => {
+    try {
+        const assignments = await Assignment.find();
+        const attemptedAssignments = [];
+        //Extracting All Attempted Quizes
+        for (let i = 0; i < assignments.length; i++) {
+            for (let j = 0; j < assignments[i].assignmentData.length; j++) {
+                if (assignments[i].assignmentData[j].attempted === true) {
+                    attemptedAssignments.push({
+                        questions: assignments[i].questions,
+                        quizData: assignments[i].assignmentData[j],
+                    });
+                }
+            }
+        }
+        if (attemptedAssignments.length == 0) {
+            console.log("No Attempted Assignments Found");
             return res.json({
                 status: "ERROR",
-                message:"No Class Found."
+                message: "No Attempted Assignments Found",
+            });
+        }
+
+        res.json({
+            status: "SUCCESS",
+            attemptedAssignments,
+        });
+    } catch (err) {
+        console.log(err);
+        res.send(err);
+    }
+});
+
+//Add Assignment (Working)
+router.post("/addassign", async (req, res, next) => {
+    //Questions is an Array of Strings
+    const { cid, questions } = req.body;
+    try {
+        const myClass = await Class.findById(cid);
+
+        if (!myClass) {
+            return res.json({
+                status: "ERROR",
+                message: "No Class Found.",
             });
         }
         const students = myClass.students;
         const assignmentData = [];
-        const answers = Array(students.length).fill('');
+        const answers = Array(students.length).fill("");
         const marks = Array(students.length).fill(0);
-        for(let i = 0; i<students.length; i++){
+        for (let i = 0; i < students.length; i++) {
             const sid = students[i].sid;
             assignmentData.push({
                 sid,
                 answers,
                 marks,
                 attempted: false,
-                total: 0
-            })
+                total: 0,
+            });
         }
 
         const assignment = new Assignment({
             cid,
             questions,
-            assignmentData
-
+            assignmentData,
         });
         await assignment.save();
         res.json({
             status: "SUCCESS",
-            message: "Assignment Added Successfully"
-        })
+            message: "Assignment Added Successfully",
+        });
+    } catch (err) {
+        console.log(err);
+        res.send(err);
+    }
+});
+
+//Download Attempted Assignment (Working)
+router.get("/assign/:id", async (req, res, next) => {
+    try{
+        const assignment = await Assignment.findById(req.params.id);
+        if (!assignment) {
+            console.log("Assignment not Found");
+            return res.json({
+                status: "ERROR",
+                message: "Assignment not Found!",
+            });
+        }
+        res.json({
+            status: "SUCCESS",
+            assignment,
+        });
     }
     catch(err){
         console.log(err);
         res.send(err);
     }
-})
-
-//Download Attempted Assignment
-router.get("/assign/:id", () => {})
+});
 
 //Delete Assignment
-router.delete("/assign/:id", () => {})
+router.delete("/assign/:id", () => {});
 
 //Add Material
-router.post("/addmat", () => {})
+router.post("/addmat", () => {});
 
 //View Material
-router.get("/materials", () => {})
+router.get("/materials", () => {});
 
 //Delete Material
-router.delete("/material/:id", () => {})
+router.delete("/material/:id", () => {});
 
 //Add Marks
-router.post("/addmarks", () => {})
+router.post("/addmarks", () => {});
 
 //Update Marks
-router.put("/marks/:id", () => {})
+router.put("/marks/:id", () => {});
 
 //Delete Marks
-router.delete("/marks/:id", () => {})
+router.delete("/marks/:id", () => {});
 
 module.exports = router;
