@@ -263,7 +263,7 @@ router.post("/addmat", async () => {
 });
 
 //View Material
-router.get("/materials", () => {
+router.get("/materials", async () => {
     try {
         const materials = await Material.findById({});
         res.json({
@@ -277,7 +277,7 @@ router.get("/materials", () => {
 });
 
 //Delete Material
-router.delete("/material/:id", () => {
+router.delete("/material/:id", async () => {
     try {
         const id = req.params.id;
         const material = await Material.findByIdAndDelete(id);
