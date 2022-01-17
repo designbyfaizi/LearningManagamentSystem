@@ -248,7 +248,7 @@ router.delete("/assign/:id", async () => {
 });
 
 //Add Material
-router.post("/addmat", () => {
+router.post("/addmat", async () => {
     try {
         const material = new Material(req.body);
         await material.save();
