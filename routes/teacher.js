@@ -90,8 +90,27 @@ router.post("/addquiz", async (req, res, next) => {
     }
 })
 
-//Download Attempted Quiz
-router.get("/quiz/:id", () => {})
+//Download Attempted Quiz (Working)
+router.get("/quiz/:id", async (req, res, next) => {
+    try{
+        const quiz = await Quiz.findById(req.params.id);
+        if(!quiz){
+            console.log("Quiz not Found");
+            return res.json({
+                status: "ERROR",
+                message: "Quiz not Found!"
+            })
+        }
+        res.json({
+            status: "SUCCESS",
+            quiz
+        })
+    }
+    catch(err){
+        console.log(err);
+        res.send(err);
+    }
+})
 
 //Delete Quiz (Working)
 router.delete("/quiz/:id", async (req, res, next) => {

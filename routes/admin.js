@@ -288,6 +288,27 @@ router.delete("/student/:id", async (req, res, next) => {
     }
 });
 
+//View Students (Working)
+router.get("/student", async (req, res, next) => {
+    try{
+        const students = await Student.find();
+        console.log(students)
+        if(students.length == 0){
+            console.log("No Students Added");
+            return res.status.json({
+                status: "ERROR",
+                message: "No Students Added!"
+            })
+        }
+        res.json({
+            status: "SUCCESS",
+            students
+        })
+    } catch(err) {
+        res.send(err)
+    }
+})
+
 //Show Dashboard
 router.get("/", async (req, res, next) => {
     try{
