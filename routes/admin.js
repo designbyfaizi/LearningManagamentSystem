@@ -35,7 +35,7 @@ router.post("/addstudent", async (req, res, next) => {
         if(studentExists){
             console.log("Username Taken");
             return res.json({
-                status: "SUCCESS",
+                status: "ERROR",
                 message: "Username Taken"
             })
         }

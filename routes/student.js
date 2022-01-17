@@ -1,14 +1,32 @@
 const express = require('express');
+const authController = require("../controllers/auth");
+const isStudentAuth = require("../middleware/is-student-auth");
+const Student = require("../models/student");
 
 const router = express.Router();
 
+// Student Login
+router.post("/login", authController.postStudentLogin);
+
 //Show Dashboard
-router.get("/", () => {})
+router.get("/", isStudentAuth, async (req, res, next) => {
+    try{
+        const studentId = req.student.id;
+        const student = await Student.findById(studentId);
+
+        res.json({student})
+    }
+    catch(err){
+        console.log(err);
+        res.send(err);
+    }
+})
 
 //View Quiz
-router.post("/viewquiz", async (req, res, next) => {
+router.get("/viewquiz", isStudentAuth, async (req, res, next) => {
     try{
-
+        const studentId = req.student.id;
+        res.send(studentId)
     }
     catch(err){
         console.log(err);
