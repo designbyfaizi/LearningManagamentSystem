@@ -4,6 +4,7 @@ const Quiz = require("../models/quiz");
 const Assignment = require("../models/assignment");
 const Student = require("../models/student");
 const Teacher = require("../models/teacher");
+const Material = require("../models/material");
 
 const router = express.Router();
 
@@ -210,9 +211,9 @@ router.post("/addassign", async (req, res, next) => {
     }
 });
 
-//Download Attempted Assignment 
+//Download Attempted Assignment
 router.get("/assign/:id", async (req, res, next) => {
-    try{
+    try {
         const assignment = await Assignment.findById(req.params.id);
         if (!assignment) {
             console.log("Assignment not Found");
@@ -225,24 +226,70 @@ router.get("/assign/:id", async (req, res, next) => {
             status: "SUCCESS",
             assignment,
         });
-    }
-    catch(err){
+    } catch (err) {
         console.log(err);
         res.send(err);
     }
 });
 
 //Delete Assignment
-router.delete("/assign/:id", () => {});
+router.delete("/assign/:id", () => {
+    try {
+        const id = req.params.id;
+        const assignment = await Assignment.findByIdAndDelete(id);
+        res.json({
+            status: "SUCCESS",
+            assignment,
+        });
+    } catch (err) {
+        console.log(err);
+        res.send(err);
+    }
+});
 
 //Add Material
-router.post("/addmat", () => {});
+router.post("/addmat", () => {
+    try {
+        const material = new Material(req.body);
+        await material.save();
+        res.json({
+            status: "SUCCESS",
+            material,
+        });
+    } catch (err) {
+        console.log(err);
+        res.send(err);
+    }
+});
 
 //View Material
-router.get("/materials", () => {});
+router.get("/materials", () => {
+    try {
+        const materials = await Material.findById({});
+        res.json({
+            status: "SUCCESS",
+            materials,
+        });
+    } catch (err) {
+        console.log(err);
+        res.send(err);
+    }
+});
 
 //Delete Material
-router.delete("/material/:id", () => {});
+router.delete("/material/:id", () => {
+    try {
+        const id = req.params.id;
+        const material = await Material.findByIdAndDelete(id);
+        res.json({
+            status: "SUCCESS",
+            material,
+        });
+    } catch (err) {
+        console.log(err);
+        res.send(err);
+    }
+});
 
 //Add Marks
 router.post("/addmarks", () => {});
