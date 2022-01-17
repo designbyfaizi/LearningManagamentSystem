@@ -312,6 +312,27 @@ router.get("/student", async (req, res, next) => {
     }
 })
 
+//View Teachers (Working)
+router.get("/teacher", async (req, res, next) => {
+    try{
+        const teachers = await Teacher.find();
+        console.log(teachers)
+        if(teachers.length == 0){
+            console.log("No Teacher Added");
+            return res.json({
+                status: "ERROR",
+                message: "No Teacher Added!"
+            })
+        }
+        res.json({
+            status: "SUCCESS",
+            teachers
+        })
+    } catch(err) {
+        res.send(err)
+    }
+})
+
 //Show Dashboard
 router.get("/", async (req, res, next) => {
     try{
