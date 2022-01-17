@@ -233,7 +233,7 @@ router.get("/assign/:id", async (req, res, next) => {
 });
 
 //Delete Assignment
-router.delete("/assign/:id", () => {
+router.delete("/assign/:id", async () => {
     try {
         const id = req.params.id;
         const assignment = await Assignment.findByIdAndDelete(id);
