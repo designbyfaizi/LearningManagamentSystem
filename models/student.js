@@ -13,6 +13,14 @@ const studentSchema = new mongoose.Schema({
   email:{
     type:String,
   },
+  username:{
+    type: String,
+    required: true
+  },
+  password:{
+    type: String,
+    required: true
+  },
   CGPA:{
     type:Number
   },

@@ -6,7 +6,15 @@ const router = express.Router();
 router.get("/", () => {})
 
 //View Quiz
-router.post("/viewquiz", () => {})
+router.post("/viewquiz", async (req, res, next) => {
+    try{
+
+    }
+    catch(err){
+        console.log(err);
+        res.send(err);
+    }
+})
 
 //Attempt Quiz
 router.get("/attemptquiz", () => {})
@@ -27,7 +35,7 @@ router.get("/material/:id", () => {})
 router.get("/result/:subid", () => {})
 
 //View Marks
-router.get("/result/", () => {});
+router.get("/result", () => {});
 
 
 module.exports = router;

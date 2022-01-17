@@ -30,18 +30,25 @@ router.post("/addteacher", async (req, res, next) => {
 //Add Student (Working)
 router.post("/addstudent", async (req, res, next) => {
     try{
-        const {name, age, gender, email} = req.body;
-
+        const {name, age, gender, email, username, password} = req.body;
+        const studentExists = await Student.findOne({username});
+        if(studentExists){
+            console.log("Username Taken");
+            return res.json({
+                status: "SUCCESS",
+                message: "Username Taken"
+            })
+        }
         const student = new Student({
-            name, age, gender, email,
+            name, age, gender, email, username, password,
             CGPA: 0.0,
             student_result:[]
         });
         await student.save();
-
         console.log("Student Added");
         res.json({
             status: "SUCCESS",
+            message: "Student Added Successfully!"
         })
     }
     catch(err){
@@ -178,14 +185,12 @@ router.put("/assignstudent/:id", async (req, res, next) => {
     const {cid} = req.body;
     try{
         const student = await Student.findById(req.params.id);
-
         if(!student){
             return res.json({
                 status: "ERROR",
                 message: "Student not Found"
             })
         }
-
         const myClass = await Class.findById(cid);
         if(!myClass){
             return res.json({
@@ -193,7 +198,6 @@ router.put("/assignstudent/:id", async (req, res, next) => {
                 message: "Class not Found!"
             });
         }
-
         //Checking if student already exists in the list
         const students = myClass.students;
         const alreadyExists = containsId(req.params.id, myClass.students);
