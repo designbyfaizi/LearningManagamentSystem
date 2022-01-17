@@ -22,16 +22,9 @@ const assignmentSchema = new Schema({
                 type: Schema.Types.ObjectId,
                 ref: "Student",
             },
-            answers: [
-                {
-                    type: String,
-                },
-            ],
-            marks: [
-                {
-                    type: Number,
-                },
-            ],
+            path:{
+                type: String
+            },
             attempted: {
                 type: Boolean,
             },

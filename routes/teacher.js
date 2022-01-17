@@ -131,7 +131,7 @@ router.delete("/quiz/:id", async (req, res, next) => {
     }
 });
 
-//View Attempted Assignments (Working)
+//View Attempted Assignments
 router.get("/viewattassign", async (req, res, next) => {
     try {
         const assignments = await Assignment.find();
@@ -168,7 +168,7 @@ router.get("/viewattassign", async (req, res, next) => {
 //Add Assignment (Working)
 router.post("/addassign", async (req, res, next) => {
     //Questions is an Array of Strings
-    const { cid, questions } = req.body;
+    const { cid, assignmentTitle, questions } = req.body;
     try {
         const myClass = await Class.findById(cid);
 
@@ -180,14 +180,14 @@ router.post("/addassign", async (req, res, next) => {
         }
         const students = myClass.students;
         const assignmentData = [];
-        const answers = Array(students.length).fill("");
-        const marks = Array(students.length).fill(0);
+        // const answers = Array(students.length).fill("");
+        // const marks = Array(students.length).fill(0);
         for (let i = 0; i < students.length; i++) {
             const sid = students[i].sid;
+            const path = `/assignments/${cid}/${assignmentTitle}/${sid}`;
             assignmentData.push({
                 sid,
-                answers,
-                marks,
+                path,
                 attempted: false,
                 total: 0,
             });
@@ -195,6 +195,7 @@ router.post("/addassign", async (req, res, next) => {
 
         const assignment = new Assignment({
             cid,
+            assignmentTitle,
             questions,
             assignmentData,
         });
@@ -209,7 +210,7 @@ router.post("/addassign", async (req, res, next) => {
     }
 });
 
-//Download Attempted Assignment (Working)
+//Download Attempted Assignment 
 router.get("/assign/:id", async (req, res, next) => {
     try{
         const assignment = await Assignment.findById(req.params.id);

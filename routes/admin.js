@@ -65,6 +65,7 @@ router.post("/addclass", async (req, res, next) => {
             name,
             tid,
             students: [],
+            material:[],
             result: []
         });
 
@@ -129,8 +130,8 @@ router.get("/class/:id", async (req, res, next) => {
 //Modify Class (Working)
 router.put("/class/:id", async (req, res, next) => {
     try{
-        const {name, tid, students, Material, result} = req.body;
-        const response = await Class.findByIdAndUpdate(req.params.id, {name, tid, students, Material, result});
+        const {name, tid, students, material, result} = req.body;
+        const response = await Class.findByIdAndUpdate(req.params.id, {name, tid, students, material, result});
 
         if(!response){
             return res.json({

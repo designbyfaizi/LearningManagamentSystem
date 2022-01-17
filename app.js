@@ -13,7 +13,7 @@ const studentRoute = require('./routes/student');
 
 const app = express();
 dotenv.config();
-
+app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());

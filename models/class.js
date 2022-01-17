@@ -19,7 +19,7 @@ const classSchema = new Schema({
             },
         },
     ],
-    Material: ["./materials/courseid/intro.pdf"],
+    material: ["./materials/courseid/intro.pdf"],
 
     result: [
         {
