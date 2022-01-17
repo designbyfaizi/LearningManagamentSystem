@@ -7,7 +7,7 @@ const containsId = require("../util/containsObject");
 
 const router = express.Router();
 
-//Add Teacher (Working)
+//Add Teacher (Working) (Test)
 router.post("/addteacher", async (req, res, next) => {
     try{
         const {name, age, gender, email, salary, contact} = req.body;
