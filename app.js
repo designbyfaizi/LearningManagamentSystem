@@ -31,7 +31,7 @@ app.use("*", (req, res, next) => {
 mongoose.connect(process.env.CONNECTION_STRING)
 .then(() => {
     console.log("Database Connected");
-    app.listen(process.env.PORT || 3000, () => {
+    app.listen(process.env.PORT, () => {
         console.log("Server Started! 💚");
     });
 })
